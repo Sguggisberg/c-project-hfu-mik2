@@ -2,14 +2,14 @@
 
 
 ## Git Befehle
-Projekt klonen:                  git clone {url}
-Status abragen:                  git status
-Lokales Proket aktualisieren:    git pull
-Änderungen hinzufügen:           git add .
-Änderungen pushen nach Remote:   git push
+Projekt klonen:                  git clone {url}__
+Status abragen:                  git status__
+Lokales Proket aktualisieren:    git pull__
+Änderungen hinzufügen:           git add .__
+Änderungen pushen nach Remote:   git push__
 
 
 
 ## Vorgehen
 
-1. Projekt lokal runterladen: git clone https://github.com/Sguggisberg/c-project-hfu-mik2.git
+1. Projekt lokal runterladen: git clone https://github.com/Sguggisberg/c-project-hfu-mik2.git__
