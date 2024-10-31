@@ -1,6 +1,6 @@
-#include <stdint.h>;
-#include "libraries/Servo1/Servo1.h"
 
+#include <stdint.h>;
+#include <stdbool.h>;
 extern void zustandTürGeschlossen();
 extern void zustandTürOffen();
 

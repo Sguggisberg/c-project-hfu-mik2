@@ -1,7 +1,30 @@
+#include <stdint.h>;
+#include "Servo1.h";
 #include <stdio.h>
 #include <stdbool.h>
 #include <functions.h>
 
+
+//Variabeln Global
+//Konstanten
+const int Switch5 = 2;      //Variable Schalter Start
+const int LED_Switch4 = 3;  //Variable Led zu
+const int LED_Switch3 = 4;  //Variable Led zu
+const int LED_Switch2 = 5;  //Variable Led zu
+const int LED_Switch1 = 6;  //Variable Led zu
+const int LED_Open = 7;     //Variable Led zu
+const int LED_Closed = 8;   //Variable Led zu
+const int Piezo = 10;       //Variable Led zu
+//Variabeln
+bool vClosed = false;       //"Save" Zustand Offen/Zu
+bool vKeyStatus = false;    //Prüfung einzeleingabe
+bool vCodeRichtig = false;  //Prüfung Cesamt Code
+uint8_t vEingabe;           // User Eingabewert
+uint8_t vKeyNr1 = 10;       // Code Wert1
+uint8_t vKeyNr2 = 10;       // Code Wert2
+uint8_t vKeyNr3 = 10;       // Code Wert3
+uint8_t vKeyNr4 = 10;       // Code Wert4
+Servo1 Schloss(9);          //Servo deklarieren mit Pin   //<-/////Marker/////////////////////////////////////////////////////
 
 // Definition der Zustände
 typedef enum {
@@ -31,6 +54,23 @@ void init() {
   int aktuellerZustand = TÜR_GESCHLOSSEN;
   runStateMchine();
   initHardware();
+
+  //Inizialisierung
+  pinMode(Switch5, INPUT);
+  pinMode(LED_Open, OUTPUT);
+  pinMode(LED_Closed, OUTPUT);
+  pinMode(Piezo, OUTPUT);
+  //Normalisierung
+  pinMode(LED_Switch1, INPUT);
+  pinMode(LED_Switch2, INPUT);
+  pinMode(LED_Switch3, INPUT);
+  pinMode(LED_Switch4, INPUT);
+  //Serielle verbindung zum Debugen
+  Serial.begin(9600);
+  //Inizialisierung Motor
+  Schloss.begin();  //<-/////Marker///////////////////////////////////////////////////////////////
+  //Meldung Bereit
+  OutputTone(0);  //Tone Bereit "0"
 }
 
 void codeCheck() {
