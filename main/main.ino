@@ -1,9 +1,8 @@
-#include <stdint.h>;
-#include "Servo1.h";
+#include <stdint.h>
+#include "Servo1.h"
 #include <stdio.h>
 #include <stdbool.h>
-#include <functions.h>
-
+#include "functions.h"
 
 //Variabeln Global
 //Konstanten
@@ -28,9 +27,9 @@ Servo1 Schloss(9);          //Servo deklarieren mit Pin   //<-/////Marker///////
 
 // Definition der Zustände
 typedef enum {
-  TÜR_GESCHLOSSEN,
-  TÜR_OFFEN,
-} TürZustand;
+  TUER_GESCHLOSSEN,
+  TUER_OFFEN,
+} TuerZustand;
 
 //---------
 // Funktionsprototyp für Zustandsfunktionen
@@ -38,20 +37,20 @@ typedef void (*ZustandsFunktion)(void);
 typedef bool (*guard)(void);
 // Definition der Zustandsstruktur
 typedef struct {
-  TürZustand from;
+  TuerZustand from;
   ZustandsFunktion transition;  // Zeiger auf die Zustandsfunktion
-  TürZustand to;
+  TuerZustand to;
 } Zustand;
 
 
 // Zustände als `struct`-Instanzen in einem Array definieren
-Zustand zustände[] = {
-  { TÜR_GESCHLOSSEN, zustandTürÖffnet, TÜR_OFFEN },
-  { TÜR_OFFEN, zustandTürSchließt, TÜR_GESCHLOSSEN },
+Zustand zustaende[] = {
+  { TUER_GESCHLOSSEN, zustandTuerOeffnet, TUER_OFFEN },
+  { TUER_OFFEN, zustandTuerSchließt, TUER_GESCHLOSSEN },
 };
 
 void init() {
-  int aktuellerZustand = TÜR_GESCHLOSSEN;
+  int aktuellerZustand = TUER_GESCHLOSSEN;
   runStateMchine();
   initHardware();
 
@@ -77,14 +76,14 @@ void codeCheck() {
 }
 
 // Anzahl der Zustände aus dem Array bestimmen
-#define ANZAHL_ZUSTÄNDE (sizeof(zustände) / sizeof(Zustand))
+#define ANZAHL_ZUSTAENDE (sizeof(zustaende) / sizeof(Zustand))
 int main() {
   init();
   bool initFinishd = false;
 
   while (true) {
     switch (aktuellerZustand) {
-      case TÜR_OFFEN:
+      case TUER_OFFEN:
         vEingabe = ReadKey();
         switch (vEingabe) {
           case 4:
@@ -105,7 +104,7 @@ int main() {
             }
             break;
 
-          case TÜR_GESCHLOSSEN:
+          case TUER_GESCHLOSSEN:
             vEingabe = ReadKey();
             switch (vEingabe) {
               case 4:
@@ -127,12 +126,12 @@ int main() {
 }
 
 void runStateMchine() {
-  for (int i = 0; i < ANZAHL_ZUSTÄNDE; i++) {
-    if (zustände[i].from == aktuellerZustand) {
-      printf("aktueller state: %d, neuer State: %d\n", aktuellerZustand, zustände[i].to);
-      zustände[i].transition();
+  for (int i = 0; i < ANZAHL_ZUSTAENDE; i++) {
+    if (zustaende[i].from == aktuellerZustand) {
+      printf("aktueller state: %d, neuer State: %d\n", aktuellerZustand, zustaende[i].to);
+      zustaende[i].transition();
 
-      aktuellerZustand = zustände[i].to;
+      aktuellerZustand = zustaende[i].to;
     }
   }
 }

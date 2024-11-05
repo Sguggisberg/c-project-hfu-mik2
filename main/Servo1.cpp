@@ -1,4 +1,4 @@
-#include "Arduino.h"
+#include <Arduino.h>
 #include "Servo1.h"
 
 Servo1::Servo1(int pin)

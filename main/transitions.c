@@ -2,14 +2,14 @@
 #include <stdbool.h>
 #include "functions.h"
 
-void zustandTürÖffnet() {
-  if (türOffenSensor()) {
+void zustandTuerOeffnet() {
+  if (tuerOffenSensor()) {
     motorAus();
   }
 }
 
-void zustandTürSchließt() {
-  if (türGeschlossenSensor()) {
+void zustandTuerSchliesst() {
+  if (tuerGeschlossenSensor()) {
     motorAus();
   }
 }

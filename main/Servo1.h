@@ -2,7 +2,7 @@
 #define __Servo1_h
 
 #include "Arduino.h"
-#endif
+
 
 class Servo1
 {
@@ -13,3 +13,5 @@ class Servo1
   private:
     int _pin;
 };
+
+#endif __Servo1_h
