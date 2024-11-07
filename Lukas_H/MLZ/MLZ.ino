@@ -4,6 +4,7 @@
 #include <Servo.h>
 //#include "libraries/Servo1.h" //Servo Bibliothek mit direktem Pfad einbinden - Arduino IDE verträgt relative Pfade nicht gut.
 
+#define DEBUG_FLAG 1
 #define WAIT_TIME_SERVO 2000
 #define BAUD 115200
 
@@ -15,7 +16,7 @@
 
 void StateMachine();
 uint8_t ReadKeyInput();
-void KeyGeneration();
+uint8_t KeyGeneration();
 void WriteLed();
 void PlayTone();
 bool CheckCode();
@@ -26,9 +27,14 @@ String current_State;
 
 int main(void){
   //Entspricht dem Setup Part der Arduino IDE.
-  Serial.begin(BAUD); //Wenn schon Serial für Debug dann wenigstens schnell -> von 9600 auf 115200 BAUD gesetzt.
-  while (Serial.available() != 1){  } //Warten auf Serielle Verbindung 
-   //Hardware INIT
+  
+  if (DEBUG_FLAG){
+    Serial.begin(BAUD); //Wenn schon Serial für Debug dann wenigstens schnell -> von 9600 auf 115200 BAUD gesetzt.
+    while (Serial.available() != 1){  } //Warten auf Serielle Verbindung 
+    Serial.println("Connected");
+  }
+
+  //Hardware INIT
   pinMode(START_BUTTON_PIN, INPUT);
   pinMode(LED_PIN_INDICATOR_OPEN, OUTPUT);
   pinMode(LED_PIN_INDICATOR_CLOSED, OUTPUT);
@@ -41,8 +47,7 @@ int main(void){
   for (int i = 0; 0<4; i++){
     pinMode(INPUT_BTN[i], INPUT_PULLUP); //Durch Taster Array iterieren und als Input mit Pullup definieren.
   }
-  // Variabeln erstellen
-  uint8_t SystemKey[] = {10,10,10,10};
+  
   while(1){ //Entspricht dem loop Part der Arduino IDE.
     RunStateMachine();
     
@@ -108,16 +113,34 @@ void RunStateMachine(){
     break;
     default:
       //Default erreicht - Verbotener Zustand Fehler melden
+    if (DEBUG_FLAG){
       Serial.println("ERROR - undefined STATE");
+    }
   }
 }
 
 
 uint8_t ReadKeyInput(){};
 
-void KeyGeneration(){};
+uint8_t KeyGeneration(){
+  uint8_t SystemKey[] = {10,10,10,10};
+  for (int i=0; i<=4; i++){
+    randomSeed(millis()); 
+    SystemKey[i] = random(4);
+    delay(random(100));
+    if (DEBUG_FLAG){
+      Serial.print("Key ");
+      Serial.print(i);
+      Serial.print("="); 
+      Serial.println(SystemKey[i]);
+    }
+  }
 
-void WriteLed(){};
+};
+
+void WriteLed(){
+  
+};
 
 void PlayTone(uint8_t InputVar){
   uint8_t Tondauer = 250; //ms
@@ -125,6 +148,9 @@ void PlayTone(uint8_t InputVar){
     
     //SystemReady
     case 0:
+    if (DEBUG_FLAG){
+      Serial.println("System bereit");
+    }
     tone(PIEZO_PIN,400,Tondauer);
     delay(Tondauer);
     tone(PIEZO_PIN,400,Tondauer);
@@ -132,30 +158,49 @@ void PlayTone(uint8_t InputVar){
 
     //Taste 1 gedrückt
     case 1:
+    if (DEBUG_FLAG){
+      Serial.println("Taste 1 betaetigt");
+    }
     tone(PIEZO_PIN,400,Tondauer);
     break;
 
     //Taste 2 gedrückt
     case 2:
+    if (DEBUG_FLAG){
+      Serial.println("Taste 2 betaetigt");
+    }
     tone(PIEZO_PIN,405,Tondauer);
     break;
 
     //Taste 3 gedrückt
     case 3:
+    if (DEBUG_FLAG){
+      Serial.println("Taste 3 betaetigt");
+    }
     tone(PIEZO_PIN,410,Tondauer);
     break;
 
     //Taste 4 gedrückt
     case 4:
+    if (DEBUG_FLAG){
+      Serial.println("Taste 4 betaetigt");
+    }
     tone(PIEZO_PIN,415,Tondauer);
     break;
+    
     //Taste 5 gedrückt
     case 5:
+    if (DEBUG_FLAG){
+      Serial.println("Taste 5 betaetigt");
+    }
     tone(PIEZO_PIN,420,Tondauer);
     break;
 
     //Code richtig
     case 6:
+    if (DEBUG_FLAG){
+      Serial.println("Code korrekt");
+    }
     tone(PIEZO_PIN,200,Tondauer);
     delay(Tondauer);
     tone(PIEZO_PIN,300,Tondauer);
@@ -166,6 +211,9 @@ void PlayTone(uint8_t InputVar){
 
     //Code falsch
     case 7:
+    if (DEBUG_FLAG){
+      Serial.println("Code falsch");
+    }
     tone(PIEZO_PIN,65,Tondauer);
     delay(Tondauer);
     tone(PIEZO_PIN,80,Tondauer);
